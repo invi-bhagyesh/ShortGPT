@@ -18,9 +18,9 @@ N_CALIBRATION_SAMPLES = 1000
 EVAL_TASKS = ["winogrande"]
 
 print("Loading calibration dataset...")
-data = load_dataset("pg19", split="validation", trust_remote_code=True)
+data = load_dataset("Salesforce/wikitext", "wikitext-2-raw-v1", split="validation")
+data = data.filter(lambda x: len(x['text'].strip()) > 100)
 data = data.select(range(min(N_CALIBRATION_SAMPLES, len(data))))
-
 
 dataloader = DataLoader(
     data,
