@@ -18,7 +18,7 @@ N_CALIBRATION_SAMPLES = 1000
 EVAL_TASKS = ["winogrande"]
 
 print("Loading calibration dataset...")
-data = load_dataset("pg19", split="validation")
+data = load_dataset("pg19", split="validation", trust_remote_code=True)
 data = data.select(range(min(N_CALIBRATION_SAMPLES, len(data))))
 
 dataloader = DataLoader(
