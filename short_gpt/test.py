@@ -8,7 +8,7 @@ from lm_eval.models.huggingface import HFLM
 from short_hf import ShortHFModel
 MODEL_NAME = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 LAYERS_PATH = "model.layers"
-N_PRUNE_LAYERS = 4  
+N_PRUNE_LAYERS = 8  
 MAX_SEQ_LEN = 1024
 STRIDE = 256
 BATCH_SIZE = 1
@@ -51,12 +51,6 @@ for batch in tqdm(dataloader, desc="Processing calibration data"):
         angular=False  # Set to True for angular distance method
     )
 
-print("\nRemoving layers based on importance scores...")
-removed_layers = short_model.remove_layers()
-print(f"Removed layers: {removed_layers}")
-print(f"Remaining layers: {len(short_model.layers)}")
-
-print("\nEvaluating pruned model with LM Evaluation Harness...")
 
 print("\nRemoving layers based on importance scores...")
 removed_layers = short_model.remove_layers()
