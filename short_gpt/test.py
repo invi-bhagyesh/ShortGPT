@@ -6,9 +6,9 @@ import lm_eval
 from lm_eval.models.huggingface import HFLM
 
 from short_hf import ShortHFModel
-MODEL_NAME = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+MODEL_NAME = "meta-llama/Llama-2-7b"
 LAYERS_PATH = "model.layers"
-N_PRUNE_LAYERS = 3  
+N_PRUNE_LAYERS = 10  
 MAX_SEQ_LEN = 1024
 STRIDE = 256
 BATCH_SIZE = 1
