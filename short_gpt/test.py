@@ -12,13 +12,15 @@ N_PRUNE_LAYERS = 4
 MAX_SEQ_LEN = 1024
 STRIDE = 256
 BATCH_SIZE = 1
-N_CALIBRATION_SAMPLES = 10  
+N_CALIBRATION_SAMPLES = 1000  
 
 # Evaluation tasks
 EVAL_TASKS = ["winogrande"]
 
 print("Loading calibration dataset...")
-data = load_dataset("pg19", split="validation", trust_remote_code=True)
+# data = load_dataset("pg19", split="validation", trust_remote_code=True)
+# data = data.select(range(min(N_CALIBRATION_SAMPLES, len(data))))
+data = load_dataset("ag_news", split="test")
 data = data.select(range(min(N_CALIBRATION_SAMPLES, len(data))))
 
 dataloader = DataLoader(
