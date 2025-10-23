@@ -27,7 +27,7 @@ dataloader = DataLoader(
     data,
     batch_size=BATCH_SIZE,
     shuffle=True,
-    generator=torch.Generator(device="cuda")
+    generator=torch.Generator().manual_seed(42)  
 )
 
 print(f"Initializing {MODEL_NAME}...")
