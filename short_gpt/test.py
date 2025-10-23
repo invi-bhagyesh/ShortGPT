@@ -58,63 +58,32 @@ print(f"Remaining layers: {len(short_model.layers)}")
 
 print("\nEvaluating pruned model with LM Evaluation Harness...")
 
-# Wrap the pruned model for lm-eval
-# Replace your PrunedHFLM class with this complete version:
-class PrunedHFLM(HFLM):
-    """Custom wrapper for pruned model evaluation"""
-    def __init__(self, pruned_model, tokenizer, **kwargs):
-        # Initialize parent class attributes
-        self._model = pruned_model
-        self.tokenizer = tokenizer
-        self._device = pruned_model.device
-        self._batch_size = kwargs.get('batch_size', 1)
-        self._max_length = kwargs.get('max_length', 2048)
-        
-        # Add required distributed training attributes
-        self._rank = 0  # Single GPU rank
-        self._world_size = 1  # Single process
-        
-    @property
-    def model(self):
-        return self._model
-    
-    @property
-    def eot_token_id(self):
-        return self.tokenizer.eos_token_id
-    
-    @property
-    def max_length(self):
-        return self._max_length
-    
-    @property
-    def batch_size(self):
-        return self._batch_size
-    
-    @property
-    def device(self):
-        return self._device
-    
-    @property
-    def rank(self):
-        return self._rank
-    
-    @property
-    def world_size(self):
-        return self._world_size
+print("\nRemoving layers based on importance scores...")
+removed_layers = short_model.remove_layers()
+print(f"Removed layers: {removed_layers}")
+print(f"Remaining layers: {len(short_model.layers)}")
 
-# Create wrapper
-pruned_lm = PrunedHFLM(
-    pruned_model=short_model.model,
-    tokenizer=short_model.tokenizer,
-    batch_size=BATCH_SIZE
-)
+# Save the pruned model temporarily
+print("\nSaving pruned model...")
+pruned_model_path = "./pruned_tinyllama_temp"
+short_model.model.save_pretrained(pruned_model_path)
+short_model.tokenizer.save_pretrained(pruned_model_path)
 
+# Evaluate using the saved model path directly
+print("\nEvaluating pruned model with LM Evaluation Harness...")
 results = lm_eval.simple_evaluate(
-    model=pruned_lm,
+    model="hf",
+    model_args=f"pretrained={pruned_model_path},dtype=float16",
     tasks=EVAL_TASKS,
     num_fewshot=0,
     batch_size=BATCH_SIZE,
     device="cuda"
 )
 
+print("\n" + "="*60)
+print("EVALUATION RESULTS")
+print("="*60)
+print(f"Removed layers: {removed_layers}")
+print(f"Remaining layers: {len(short_model.layers)}")
+print("\nResults:")
 print(results)
