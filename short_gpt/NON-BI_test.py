@@ -8,7 +8,7 @@ from short_hf import ShortHFModel
 
 MODEL_NAME = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 LAYERS_PATH = "model.layers"
-N_PRUNE_LAYERS = 3  
+N_PRUNE_LAYERS = 8  
 BATCH_SIZE = 1
 
 # Evaluation tasks
