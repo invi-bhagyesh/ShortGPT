@@ -59,6 +59,7 @@ print(f"Remaining layers: {len(short_model.layers)}")
 print("\nEvaluating pruned model with LM Evaluation Harness...")
 
 # Wrap the pruned model for lm-eval
+# Replace your PrunedHFLM class with this complete version:
 class PrunedHFLM(HFLM):
     """Custom wrapper for pruned model evaluation"""
     def __init__(self, pruned_model, tokenizer, **kwargs):
@@ -68,6 +69,10 @@ class PrunedHFLM(HFLM):
         self._device = pruned_model.device
         self._batch_size = kwargs.get('batch_size', 1)
         self._max_length = kwargs.get('max_length', 2048)
+        
+        # Add required distributed training attributes
+        self._rank = 0  # Single GPU rank
+        self._world_size = 1  # Single process
         
     @property
     def model(self):
@@ -88,6 +93,14 @@ class PrunedHFLM(HFLM):
     @property
     def device(self):
         return self._device
+    
+    @property
+    def rank(self):
+        return self._rank
+    
+    @property
+    def world_size(self):
+        return self._world_size
 
 # Create wrapper
 pruned_lm = PrunedHFLM(
