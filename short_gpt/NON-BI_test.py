@@ -6,7 +6,7 @@ import lm_eval
 
 from short_hf import ShortHFModel
 
-MODEL_NAME = "meta-llama/Llama-2-7b"
+MODEL_NAME = "meta-llama/Llama-2-7b-hf"
 LAYERS_PATH = "model.layers"
 N_PRUNE_LAYERS = 10  
 BATCH_SIZE = 1
