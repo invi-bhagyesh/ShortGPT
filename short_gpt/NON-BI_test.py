@@ -6,13 +6,13 @@ import lm_eval
 
 from short_hf import ShortHFModel
 
-MODEL_NAME = "meta-llama/Llama-2-7b-hf"
+MODEL_NAME = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 LAYERS_PATH = "model.layers"
-N_PRUNE_LAYERS = 10  
+N_PRUNE_LAYERS = 3  
 BATCH_SIZE = 1
 
 # Evaluation tasks
-EVAL_TASKS = ["winogrande"]
+EVAL_TASKS = ["truthfulqa_mc"]
 
 print(f"Initializing {MODEL_NAME}...")
 short_model = ShortHFModel(
