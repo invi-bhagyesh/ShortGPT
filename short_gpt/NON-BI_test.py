@@ -1,3 +1,9 @@
+import os
+import datasets
+
+# SET THIS FIRST - before any other imports or operations
+datasets.config.HF_DATASETS_TRUST_REMOTE_CODE = True
+
 import torch
 from torch.utils.data import DataLoader
 from datasets import load_dataset
