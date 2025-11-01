@@ -9,6 +9,7 @@ from torch.utils.data import DataLoader
 from datasets import load_dataset
 from tqdm import tqdm
 import lm_eval
+from lm_eval.utils import make_table  # Add this import
 import argparse
 
 from short_hf import ShortHFModel
@@ -123,8 +124,23 @@ def main():
     print(f"Removed layers: {layers_to_remove}")
     print(f"Remaining layers: {len(short_model.layers)}")
     print(f"Tasks: {', '.join(args.eval_tasks)}")
-    print("\nResults:")
-    print(results)
+    
+    # Print formatted table with all metrics
+    print("\n" + make_table(results))
+    
+    # Print detailed results for each task
+    print("\nDetailed Metrics:")
+    for task_name in args.eval_tasks:
+        if task_name in results['results']:
+            print(f"\n{task_name}:")
+            task_results = results['results'][task_name]
+            for metric, value in task_results.items():
+                if not metric.endswith('_stderr'):
+                    stderr = task_results.get(f"{metric}_stderr", None)
+                    if stderr is not None:
+                        print(f"  {metric}: {value:.4f} ± {stderr:.4f}")
+                    else:
+                        print(f"  {metric}: {value:.4f}")
 
 
 if __name__ == "__main__":
