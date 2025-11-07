@@ -43,8 +43,8 @@ def main():
 
         if args.dpo_path:
             print(f"Loading existing DPO model from {args.dpo_path}...")
-            model = AutoModelForCausalLM.from_pretrained(args.dpo_path)
-            tokenizer = AutoTokenizer.from_pretrained(args.dpo_path)
+            model = AutoModelForCausalLM.from_pretrained(args.dpo_path, local_files_only=True)
+            tokenizer = AutoTokenizer.from_pretrained(args.dpo_path, local_files_only=True)
             if tokenizer.pad_token is None:
                 tokenizer.pad_token = tokenizer.eos_token
         else:
