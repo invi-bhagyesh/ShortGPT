@@ -23,7 +23,7 @@ def parse_args():
     parser.add_argument("--eval_tasks", type=str, nargs="+", default=["truthfulqa_mc"], help="Evaluation tasks (space-separated list)")
     parser.add_argument("--layers_path", type=str, default="model.layers", help="Path to model layers attribute")
     parser.add_argument("--batch_size", type=int, default=1, help="Batch size for evaluation")
-    parser.add_argument("--output_dir", type=str, default="./pruned_model", help="Directory to save pruned model")
+    parser.add_argument("--output_dir", type=str, default=None, help="Directory to save pruned model")
     parser.add_argument("--num_fewshot", type=int, default=0, help="Number of few-shot examples for evaluation")
     parser.add_argument("--dataset", type=str, default=None, help="dataset name for DPO like 'crows-pairs'")
     parser.add_argument("--dpo_path", type=str, default=None, help="path to an existing DPO fine-tuned model; if provided, DPO training will be skipped")
@@ -32,6 +32,11 @@ def parse_args():
 
 def main():
     args = parse_args()
+
+    model_id = args.model_name.split('/')[-1]
+    task_id = '_'.join(args.eval_tasks)
+    args.output_dir = f"./{model_id}_{task_id}_pruned"
+    os.makedirs(args.output_dir, exist_ok=True)
 
 ###########################################################################
     # ------------------ DPO fine-tuning ------------------ #
@@ -87,7 +92,7 @@ def main():
             train_data = train_data.map(preprocess, batched=False)
 
             training_args = DPOConfig(
-                output_dir = f"./dpo_finetuned_{'_'.join(args.eval_tasks)}",
+                output_dir = args.output_dir,
                 num_train_epochs=1,
                 per_device_train_batch_size=2,
                 per_device_eval_batch_size=2,
@@ -114,6 +119,7 @@ def main():
             print("Starting DPO fine-tuning...")
             trainer.train()
             model.save_pretrained(training_args.output_dir)
+            print(training_args.output_dir)
             tokenizer.save_pretrained(training_args.output_dir)
             print("DPO fine-tuning complete.")
 
