@@ -87,7 +87,7 @@ def main():
             train_data = train_data.map(preprocess, batched=False)
 
             training_args = DPOConfig(
-                output_dir=f"./dpo_finetuned_{args.eval_tasks}",
+                output_dir = f"./dpo_finetuned_{'_'.join(args.eval_tasks)}",
                 num_train_epochs=1,
                 per_device_train_batch_size=2,
                 per_device_eval_batch_size=2,
