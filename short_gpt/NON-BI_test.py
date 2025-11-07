@@ -43,6 +43,9 @@ def main():
 
         if args.dpo_path:
             print(f"Loading existing DPO model from {args.dpo_path}...")
+            dpo_path = os.path.abspath(os.path.expanduser(args.dpo_path))
+            if not os.path.isdir(dpo_path):
+                raise ValueError(f"{dpo_path} does not exist or is not a directory")
             model = AutoModelForCausalLM.from_pretrained(args.dpo_path, local_files_only=True)
             tokenizer = AutoTokenizer.from_pretrained(args.dpo_path, local_files_only=True)
             if tokenizer.pad_token is None:
